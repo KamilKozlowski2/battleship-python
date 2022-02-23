@@ -17,6 +17,11 @@ def main():
     TelemetryClient.init()
     TelemetryClient.trackEvent('ApplicationStarted', {'custom_dimensions': {'Technology': 'Python'}})
     colorama.init()
+    if (platform.system().lower() == "windows"):
+        cmd = 'cls'
+    else:
+        cmd = 'clear'
+    os.system(cmd)
     print(Fore.YELLOW + r"""
                                     |__
                                     |\/
@@ -126,7 +131,7 @@ def initialize_myFleet():
         print(f"Please enter the positions for the {ship.name} (size: {ship.size})")
 
         for i in range(ship.size):
-            position_input = input(Fore.BLUE + f"Enter position {i+1} of {ship.size} (i.e A3):" + Style.RESET_ALL)
+            position_input = input(Fore.BLUE + "Enter position " + str(i+1) + " of " + str(ship.size) + " (i.e A3):" + Style.RESET_ALL)
             ship.add_position(position_input)
             TelemetryClient.trackEvent('Player_PlaceShipPosition', {'custom_dimensions': {'Position': position_input, 'Ship': ship.name, 'PositionInShip': i}})
 
