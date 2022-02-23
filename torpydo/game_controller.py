@@ -17,6 +17,16 @@ class GameController(object):
 
         return False
 
+    def process_shot(self, ships: list, shot: Position):
+        if ships is None:
+            raise ValueError('ships is null')
+
+        if shot is None:
+            raise ValueError('shot is null')
+
+        for ship in ships:
+            ship.shoot(shot)
+
     def initialize_ships():
         return [
             Ship("Aircraft Carrier", 5, Color.CADET_BLUE),

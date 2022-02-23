@@ -21,9 +21,10 @@ class Position(object):
     def __init__(self, column: Letter, row: int):
         self.column = column
         self.row = row
+        self.hit = False
 
     def __eq__(self, other):
-        return self.__dict__ == other.__dict__
+        return self.column == other.column and self.row == other.row
 
     def __str__(self):
         return f"{self.column.name}{self.row}"
@@ -36,6 +37,19 @@ class Ship(object):
         self.size = size
         self.color = color
         self.positions = []
+        self.is_sunk = False
+
+    def shoot(self, input: Position):
+        for position in self.positions:
+            if input.__eq__(position):
+                position.hit = True
+        self.check_if_sunk()
+
+    def check_if_sunk(self):
+        temp = True
+        for position in self.positions:
+            temp &= position.hit
+        self.is_sunk = temp
 
     def add_position(self, input: str):
         letter = Letter[input.upper()[:1]]

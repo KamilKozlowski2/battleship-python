@@ -79,6 +79,10 @@ def start_game():
                    \  \   /  /''' + Style.RESET_ALL)
 
         print(Fore.GREEN + "Yeah ! Nice hit !" + Style.RESET_ALL if is_hit else Fore.RED + "Miss" + Style.RESET_ALL)
+        enemy_ships_sunk, enemy_ships_not_sunk = split_ship_by_status(enemyFleet)
+        print(Fore.YELLOW + "Enemy ships sunk: " + Fore.GREEN + ",".join((ship.name for ship in enemy_ships_sunk)) + Style.RESET_ALL)
+        print(Fore.YELLOW + "Enemy ships not sunk: " + Fore.RED + ",".join((ship.name for ship in enemy_ships_not_sunk)) + Style.RESET_ALL)
+
         TelemetryClient.trackEvent('Player_ShootPosition', {'custom_dimensions': {'Position': str(position), 'IsHit': is_hit}})
 
         position = get_random_position()
@@ -96,6 +100,7 @@ def start_game():
             -   (\- |  \ /  |  /)  -
                  -\  \     /  /-
                    \  \   /  /''' + Style.RESET_ALL)
+
 
 def parse_position(input: str):
     letter = Letter[input.upper()[:1]]
@@ -161,6 +166,17 @@ def initialize_enemyFleet():
 
     enemyFleet[4].positions.append(Position(Letter.C, 5))
     enemyFleet[4].positions.append(Position(Letter.C, 6))
+
+def split_ship_by_status(ships: list):
+    ships_sunk = []
+    ships_not_sunk = []
+    for ship in ships:
+        if ship.is_sunk:
+            ships_sunk.append(ship)
+        else:
+            ships_not_sunk.append(ship)
+    return ships_sunk, ships_not_sunk
+
 
 if __name__ == '__main__':
     main()
