@@ -2,7 +2,11 @@ import random
 
 from torpydo.ship import Color, Letter, Position, Ship
 
+
 class GameController(object):
+    columns = 8
+    rows = 8
+
     def check_is_hit(ships: list, shot: Position):
         if ships is None:
             raise ValueError('ships is null')

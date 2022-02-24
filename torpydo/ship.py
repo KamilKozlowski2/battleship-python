@@ -51,12 +51,8 @@ class Ship(object):
             temp &= position.hit
         self.is_sunk = temp
 
-    def add_position(self, input: str):
-        letter = Letter[input.upper()[:1]]
-        number = int(input[1:])
-        position = Position(letter, number)
-
-        self.positions.append(Position(letter, number))
+    def add_position(self, input: Position):
+        self.positions.append(input)
 
     def __str__(self):
         return f"{self.color.name} {self.name} ({self.size}): {self.positions}"

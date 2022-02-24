@@ -37,11 +37,12 @@ def main():
 |                        Welcome to Battleship                         BB-61/
  \_________________________________________________________________________|""" + Style.RESET_ALL)
 
-    initialize_game()
+    game = GameController()
+    initialize_game(game)
 
-    start_game()
+    start_game(game)
 
-def start_game():
+def start_game(game: GameController):
     global myFleet, enemyFleet
     # clear the screen
     if(platform.system().lower()=="windows"):
@@ -65,8 +66,9 @@ def start_game():
         print()
         print(Fore.WHITE + ("-" * 80) + Style.RESET_ALL)
         print(Fore.YELLOW + "Player, it's your turn" + Style.RESET_ALL)
-        position = parse_position(input(Fore.CYAN + "Enter coordinates for your shot :" + Style.RESET_ALL))
+        position = query_position(game, Fore.BLUE + "Enter coordinates for your shot :" + Style.RESET_ALL)
         is_hit = GameController.check_is_hit(enemyFleet, position)
+        # process_shot();
         if is_hit:
             print(Fore.GREEN + r'''
                 \          .  ./
@@ -85,7 +87,7 @@ def start_game():
 
         # TelemetryClient.trackEvent('Player_ShootPosition', {'custom_dimensions': {'Position': str(position), 'IsHit': is_hit}})
 
-        position = get_random_position()
+        position = get_random_position(game)
         is_hit = GameController.check_is_hit(myFleet, position)
         print()
         print(f"Computer shoot in {str(position)} and {Fore.RED + 'hit your ship!' if is_hit else Fore.GREEN + 'miss'}" + Style.RESET_ALL)
@@ -105,26 +107,34 @@ def start_game():
 def parse_position(input: str):
     letter = Letter[input.upper()[:1]]
     number = int(input[1:])
-    position = Position(letter, number)
-
+    if number < 1 or number > 8:
+        raise Exception("Must be between 1 and 8 inclusive")
     return Position(letter, number)
 
-def get_random_position():
-    rows = 8
-    lines = 8
+def query_position(game: GameController, title: str):
+    try:
+        text = input(title)
+        return parse_position(text)
+    except:
+        print(Fore.RED + f"Invalid position, must be between A1 and H8" + Style.RESET_ALL)
+        query_position(game, title)
 
-    letter = Letter(random.randint(1, lines))
+def get_random_position(game: GameController):
+    rows = game.rows
+    columns = game.columns
+
+    letter = Letter(random.randint(1, columns))
     number = random.randint(1, rows)
     position = Position(letter, number)
 
     return position
 
-def initialize_game():
-    initialize_myFleet()
+def initialize_game(game: GameController):
+    initialize_myFleet(game)
 
     initialize_enemyFleet()
 
-def initialize_myFleet():
+def initialize_myFleet(game: GameController):
     global myFleet
 
     myFleet = GameController.initialize_ships()
@@ -136,7 +146,7 @@ def initialize_myFleet():
         print(f"Please enter the positions for the {ship.name} (size: {ship.size})")
 
         for i in range(ship.size):
-            position_input = input(Fore.CYAN + "Enter position " + str(i+1) + " of " + str(ship.size) + " (i.e A3):" + Style.RESET_ALL)
+            position_input = query_position(game, Fore.BLUE + "Enter position " + str(i+1) + " of " + str(ship.size) + " (i.e A3):" + Style.RESET_ALL)
             ship.add_position(position_input)
             # TelemetryClient.trackEvent('Player_PlaceShipPosition', {'custom_dimensions': {'Position': position_input, 'Ship': ship.name, 'PositionInShip': i}})
 
