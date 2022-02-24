@@ -1,5 +1,7 @@
 import random
 import os
+from typing import List
+
 import colorama
 import platform
 
@@ -161,7 +163,7 @@ def get_random_position(game: GameController):
 def initialize_game(game: GameController):
     initialize_myFleet(game)
 
-    initialize_enemyFleet()
+    initialize_enemyFleet(game)
 
 
 def initialize_myFleet(game: GameController):
@@ -181,33 +183,85 @@ def initialize_myFleet(game: GameController):
             # TelemetryClient.trackEvent('Player_PlaceShipPosition', {'custom_dimensions': {'Position': position_input, 'Ship': ship.name, 'PositionInShip': i}})
 
 
-def initialize_enemyFleet():
+def initialize_enemyFleet(game: GameController):
     global enemyFleet
 
     enemyFleet = GameController.initialize_ships()
 
-    enemyFleet[0].positions.append(Position(Letter.B, 4))
-    enemyFleet[0].positions.append(Position(Letter.B, 5))
-    enemyFleet[0].positions.append(Position(Letter.B, 6))
-    enemyFleet[0].positions.append(Position(Letter.B, 7))
-    enemyFleet[0].positions.append(Position(Letter.B, 8))
+    for i in range(len(enemyFleet)):
+        ship = enemyFleet[i]
+        roll_ship(game, enemyFleet, ship)
 
-    enemyFleet[1].positions.append(Position(Letter.E, 6))
-    enemyFleet[1].positions.append(Position(Letter.E, 7))
-    enemyFleet[1].positions.append(Position(Letter.E, 8))
-    enemyFleet[1].positions.append(Position(Letter.E, 9))
 
-    enemyFleet[2].positions.append(Position(Letter.A, 3))
-    enemyFleet[2].positions.append(Position(Letter.B, 3))
-    enemyFleet[2].positions.append(Position(Letter.C, 3))
+def roll_ship(game: GameController, all_ships: List[Ship], ship: Ship):
+    last_roll_valid = False
+    start_pos = get_random_position(game)
+    direction = random.randint(0, 3)
+    length: int = ship.size
+    while not last_roll_valid:
+        start_pos = get_random_position(game)
+        direction = random.randint(0, 3)
+        length: int = ship.size
 
-    enemyFleet[3].positions.append(Position(Letter.F, 8))
-    enemyFleet[3].positions.append(Position(Letter.G, 8))
-    enemyFleet[3].positions.append(Position(Letter.H, 8))
+        last_roll_valid = valid_ship(start_pos, length, all_ships, game, direction)
 
-    enemyFleet[4].positions.append(Position(Letter.C, 5))
-    enemyFleet[4].positions.append(Position(Letter.C, 6))
 
+    for s in all_ships:
+        for p in s.positions:
+            for i in range(length):
+                my_pos = add_dir_len_to_position(start_pos, direction, i)
+                if my_pos == p:
+                    return False
+
+    for i in range(length):
+        ship.positions.append(add_dir_len_to_position(start_pos, direction, i))
+    return True
+
+def valid_ship(start_pos, length, all_ships, game, direction):
+    end_pos: Position
+    try:
+        end_pos = add_dir_len_to_position(start_pos, direction, length)
+    except:
+        return False
+    if not in_bounds(start_pos, game):
+        return False
+    if not in_bounds(end_pos, game):
+        return False
+
+    for s in all_ships:
+        for p in s.positions:
+            for i in range(length):
+                my_pos: Position
+                try:
+                    my_pos = add_dir_len_to_position(start_pos, direction, i)
+                except:
+                    return False
+                if my_pos == p:
+                    return False
+    return True
+
+
+def in_bounds(pos: Position, game: GameController):
+    if pos.column.value < Letter.A.value:
+        return False
+    if pos.column.value > Letter.H.value:
+        return False
+    if pos.row < 1:
+        return False
+    if pos.row > game.rows + 1:
+        return False
+    return True
+
+
+def add_dir_len_to_position(pos: Position, direction: int, length: int):
+    if direction == 0:
+        return Position(Letter(pos.column.value + length), pos.row)
+    elif direction == 1:
+        return Position(pos.column, pos.row + length)
+    elif direction == 2:
+        return Position(Letter(pos.column.value - length), pos.row)
+    else:
+        return Position(pos.column, pos.row - length)
 
 def split_ship_by_status(ships: list):
     ships_sunk = []
