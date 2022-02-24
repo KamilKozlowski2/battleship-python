@@ -86,6 +86,7 @@ def start_game(game: GameController):
         is_hit = GameController.check_is_hit(enemyFleet, position)
         game.process_shot(enemyFleet, position)
         if is_hit:
+            GameController.process_shot(enemyFleet, position)
             print(Fore.GREEN + r'''
                 \          .  ./
               \   .:"";'.:..""   /
@@ -106,12 +107,15 @@ def start_game(game: GameController):
         # TelemetryClient.trackEvent('Player_ShootPosition', {'custom_dimensions': {'Position': str(position), 'IsHit': is_hit}})
 
         position = get_random_position(game)
+        print(position)
         is_hit = GameController.check_is_hit(myFleet, position)
         print()
         print(
             f"Computer shoot in {str(position)} and {Fore.RED + 'hit your ship!' if is_hit else Fore.GREEN + 'miss'}" + Style.RESET_ALL)
         # TelemetryClient.trackEvent('Computer_ShootPosition', {'custom_dimensions': {'Position': str(position), 'IsHit': is_hit}})
         if is_hit:
+            GameController.process_shot(enemyFleet, position)
+
             print(Fore.RED + r'''
                 \          .  ./
               \   .:"";'.:..""   /
