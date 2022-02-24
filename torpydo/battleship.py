@@ -140,8 +140,8 @@ def parse_position(input: str):
 
 
 def query_position(game: GameController, title: str):
+    text = input(title)
     try:
-        text = input(title)
         check_debug_string(game, text)
         return parse_position(text)
     except:
