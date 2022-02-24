@@ -22,7 +22,7 @@ class GameController(object):
 
         return False
 
-    def process_shot(ships: list, shot: Position):
+    def process_shot(self, ships: list, shot: Position):
         if ships is None:
             raise ValueError('ships is null')
 

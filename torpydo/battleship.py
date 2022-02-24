@@ -20,6 +20,7 @@ enemyFleet = []
 def main():
     # TelemetryClient.init()
     # TelemetryClient.trackEvent('ApplicationStarted', {'custom_dimensions': {'Technology': 'Python'}})
+
     colorama.init()
     if (platform.system().lower() == "windows"):
         cmd = 'cls'
@@ -86,7 +87,7 @@ def start_game(game: GameController):
         print(Fore.YELLOW + "Player, it's your turn" + Style.RESET_ALL)
         position = query_position(game, Fore.CYAN + "Enter coordinates for your shot :" + Style.RESET_ALL)
         is_hit = GameController.check_is_hit(enemyFleet, position)
-        # game.process_shot(enemyFleet, position)
+        game.process_shot(enemyFleet, position)
         if is_hit:
             # GameController.process_shot(enemyFleet, position)
             print(Fore.GREEN + r'''
@@ -127,7 +128,7 @@ def start_game(game: GameController):
             -   (\- |  \ /  |  /)  -
                  -\  \     /  /-
                    \  \   /  /''' + Style.RESET_ALL)
-        # game.process_shot(myFleet, position)
+        game.process_shot(myFleet, position)
 
 
 def parse_position(input: str):
@@ -277,6 +278,8 @@ def split_ship_by_status(ships: list):
 def check_debug_string(game: GameController, text: str):
     if text.lower() == "debug":
         game.debug = True
+    if text.lower() == "norandom":
+        random.seed(0)
 
 
 if __name__ == '__main__':
