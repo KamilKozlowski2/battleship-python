@@ -1,4 +1,6 @@
 from enum import Enum
+from typing import List
+
 
 class Color(Enum):
     CADET_BLUE = 1
@@ -36,7 +38,7 @@ class Ship(object):
         self.name = name
         self.size = size
         self.color = color
-        self.positions = []
+        self.positions: List[Position] = []
         self.is_sunk = False
 
     def shoot(self, input: Position):
