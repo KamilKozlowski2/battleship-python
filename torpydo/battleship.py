@@ -6,7 +6,7 @@ import platform
 from colorama import Fore, Back, Style
 from torpydo.ship import Color, Letter, Position, Ship
 from torpydo.game_controller import GameController
-from torpydo.telemetryclient import TelemetryClient
+# from torpydo.telemetryclient import TelemetryClient
 
 print("Starting")
 
@@ -14,8 +14,8 @@ myFleet = []
 enemyFleet = []
 
 def main():
-    TelemetryClient.init()
-    TelemetryClient.trackEvent('ApplicationStarted', {'custom_dimensions': {'Technology': 'Python'}})
+    # TelemetryClient.init()
+    # TelemetryClient.trackEvent('ApplicationStarted', {'custom_dimensions': {'Technology': 'Python'}})
     colorama.init()
     if (platform.system().lower() == "windows"):
         cmd = 'cls'
@@ -83,13 +83,13 @@ def start_game():
         print(Fore.YELLOW + "Enemy ships sunk: " + Fore.GREEN + ",".join((ship.name for ship in enemy_ships_sunk)) + Style.RESET_ALL)
         print(Fore.YELLOW + "Enemy ships not sunk: " + Fore.RED + ",".join((ship.name for ship in enemy_ships_not_sunk)) + Style.RESET_ALL)
 
-        TelemetryClient.trackEvent('Player_ShootPosition', {'custom_dimensions': {'Position': str(position), 'IsHit': is_hit}})
+        # TelemetryClient.trackEvent('Player_ShootPosition', {'custom_dimensions': {'Position': str(position), 'IsHit': is_hit}})
 
         position = get_random_position()
         is_hit = GameController.check_is_hit(myFleet, position)
         print()
         print(f"Computer shoot in {str(position)} and {Fore.RED + 'hit your ship!' if is_hit else Fore.GREEN + 'miss'}" + Style.RESET_ALL)
-        TelemetryClient.trackEvent('Computer_ShootPosition', {'custom_dimensions': {'Position': str(position), 'IsHit': is_hit}})
+        # TelemetryClient.trackEvent('Computer_ShootPosition', {'custom_dimensions': {'Position': str(position), 'IsHit': is_hit}})
         if is_hit:
             print(Fore.RED + r'''
                 \          .  ./
@@ -138,7 +138,7 @@ def initialize_myFleet():
         for i in range(ship.size):
             position_input = input(Fore.BLUE + "Enter position " + str(i+1) + " of " + str(ship.size) + " (i.e A3):" + Style.RESET_ALL)
             ship.add_position(position_input)
-            TelemetryClient.trackEvent('Player_PlaceShipPosition', {'custom_dimensions': {'Position': position_input, 'Ship': ship.name, 'PositionInShip': i}})
+            # TelemetryClient.trackEvent('Player_PlaceShipPosition', {'custom_dimensions': {'Position': position_input, 'Ship': ship.name, 'PositionInShip': i}})
 
 def initialize_enemyFleet():
     global enemyFleet
