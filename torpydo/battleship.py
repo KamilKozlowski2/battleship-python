@@ -1,5 +1,6 @@
 import random
 import os
+import time
 from typing import List
 
 import colorama
@@ -287,7 +288,35 @@ def check_debug_string(game: GameController, text: str):
 
 
 def win_game():
-    print("WIN!")
+    colors = [
+        Fore.RED,
+        Fore.GREEN,
+        Fore.YELLOW,
+        Fore.BLUE,
+        Fore.MAGENTA,
+        Fore.CYAN,
+        Fore.WHITE
+    ]
+    if (platform.system().lower() == "windows"):
+        cmd = 'cls'
+    else:
+        cmd = 'clear'
+    i = 0
+    win_pic = r'''
+ __      __.___ _______   
+/  \    /  \   |\      \  
+\   \/\/   /   |/   |   \ 
+ \        /|   /    |    \
+  \__/\  / |___\____|__  /
+       \/              \/'''
+    try:
+        while True:
+            os.system(cmd)
+            print(colors[i] + win_pic + Style.RESET_ALL)
+            i = i + 1
+            time.sleep(0.3)
+    except:
+        return
 
 
 if __name__ == '__main__':
