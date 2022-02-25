@@ -1,6 +1,8 @@
 import random
 import os
 import time
+import playsound
+
 from typing import List
 
 import colorama
@@ -21,7 +23,6 @@ enemyFleet = []
 def main():
     # TelemetryClient.init()
     # TelemetryClient.trackEvent('ApplicationStarted', {'custom_dimensions': {'Technology': 'Python'}})
-
     colorama.init()
     if (platform.system().lower() == "windows"):
         cmd = 'cls'
@@ -309,6 +310,8 @@ def win_game():
  \        /|   /    |    \
   \__/\  / |___\____|__  /
        \/              \/'''
+
+    playsound.playsound('mp3\oklaski.mp3')
     try:
         while True:
             os.system(cmd)
