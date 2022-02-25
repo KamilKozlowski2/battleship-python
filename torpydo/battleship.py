@@ -311,7 +311,7 @@ def win_game():
   \__/\  / |___\____|__  /
        \/              \/'''
 
-    playsound.playsound('mp3\oklaski.mp3')
+    playsound.playsound('oklaski.mp3')
     try:
         while True:
             os.system(cmd)
