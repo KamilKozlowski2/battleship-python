@@ -318,7 +318,7 @@ def win_game():
             print(colors[i] + win_pic + Style.RESET_ALL)
             i = (i + 1) % (len(colors) - 1)
             time.sleep(0.3)
-    except Exception as e:
+    except KeyboardInterrupt:
         return
 
 
