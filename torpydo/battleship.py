@@ -107,6 +107,10 @@ def start_game(game: GameController):
         print(Fore.YELLOW + "Enemy ships not sunk: " + Fore.RED + ",".join(
             (ship.name for ship in enemy_ships_not_sunk)) + Style.RESET_ALL)
 
+        if len(enemy_ships_not_sunk) == 0:
+            win_game()
+            return
+
         # TelemetryClient.trackEvent('Player_ShootPosition', {'custom_dimensions': {'Position': str(position), 'IsHit': is_hit}})
 
         position = get_random_position(game)
@@ -280,6 +284,10 @@ def check_debug_string(game: GameController, text: str):
         game.debug = True
     if text.lower() == "norandom":
         random.seed(0)
+
+
+def win_game():
+    print("WIN!")
 
 
 if __name__ == '__main__':
